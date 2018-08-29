@@ -84,7 +84,7 @@ export function Telephony(askPermission?: boolean): Promise<any> {
 	}).then(function(hasPermissions) {
 
 		let manager = application.android.context.getSystemService(android.content.Context.TELEPHONY_SERVICE)
-		let results: Telephony = {
+		let results: any = {
 			countryCode: manager.getSimCountryIso() || "",
 			simOperator: manager.getSimOperator() || "",
 			carrierName: manager.getSimOperatorName() || "",

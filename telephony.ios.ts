@@ -26,11 +26,7 @@
 	Peter Bakondy
 	- https://github.com/pbakondy/cordova-plugin-sim
 **/
-
-import * as application from 'application'
 declare let CTTelephonyNetworkInfo: any
-
-
 
 export function Telephony(): Promise<any> {
 

@@ -51,10 +51,10 @@ function hasPermission(): boolean {
 	return doesHavePermission
 }
 
-export function Telephony(): Promise<any> {
+export function Telephony(askPermission?: boolean): Promise<any> {
 	return new Promise(function(resolve, reject) {
 
-		if (hasPermission()) {
+		if (hasPermission() || !askPermission) {
 			resolve(true)
 		} else {
 
@@ -84,7 +84,7 @@ export function Telephony(): Promise<any> {
 	}).then(function(hasPermissions) {
 
 		let manager = application.android.context.getSystemService(android.content.Context.TELEPHONY_SERVICE)
-		let results: any = {
+		let results: Telephony = {
 			countryCode: manager.getSimCountryIso() || "",
 			simOperator: manager.getSimOperator() || "",
 			carrierName: manager.getSimOperatorName() || "",

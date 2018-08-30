@@ -27,63 +27,27 @@
 	- https://github.com/pbakondy/cordova-plugin-sim
 **/
 
-import * as application from 'application'
-declare let android: any
+import { android as androidApp } from 'application';
+declare var android: any;
 
-
-
-function hasPermission(): boolean {
-	// if (android.os.Build.VERSION.SDK_INT < 23) {
-	//	   return true
-	// }
-
-	if (!android.support || !android.support.v4 || !android.support.v4.content || !android.support.v4.content.ContextCompat || !android.support.v4.content.ContextCompat.checkSelfPermission) {
-		return true
-	}
-
-	// Interesting, this actually works on API less than 23 and will return false if the manifest permission was forgotten
-	let doesHavePermission: boolean = (
-		android.content.pm.PackageManager.PERMISSION_GRANTED
-		==
-		android.support.v4.content.ContextCompat.checkSelfPermission(application.android.foregroundActivity, android.Manifest.permission.READ_PHONE_STATE)
-	)
-
-	return doesHavePermission
+export interface TelephonyInfo {
+	countryCode?: string;
+	simOperator?: string;
+	carrierName?: string;
+	callState?: string;
+	dataActivity?: string;
+	networkType?: number;
+	phoneType?: number;
+	simState?: number;
+	isNetworkRoaming?: string;
+	mcc?: string;
+	mnc?: string;
 }
 
-export function Telephony(askPermission?: boolean): Promise<any> {
+export function Telephony(): Promise<TelephonyInfo> {
 	return new Promise(function(resolve, reject) {
 
-		if (hasPermission() || !askPermission) {
-			resolve(true)
-		} else {
-
-			let reqid: number = Math.floor(Math.random() * 999)
-
-			application.android.addEventListener(application.AndroidApplication.activityRequestPermissionsEvent, function onPermissionsEvent(args) {
-
-				if ((<any>args).requestCode == reqid && (<any>args).permissions[0] == android.Manifest.permission.READ_PHONE_STATE) {
-
-					// removeEventListener to reduce memory usage since it doesnt need to listen anymore
-					application.android.removeEventListener(application.AndroidApplication.activityRequestPermissionsEvent, onPermissionsEvent)
-
-					if ((<any>args).grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-						resolve(true)
-					} else {
-						resolve(false)
-						// reject(new Error("Permission DENIED for android.permission.READ_PHONE_STATE"))
-					}
-				}
-
-			});
-
-			android.support.v4.app.ActivityCompat.requestPermissions(application.android.foregroundActivity, [android.Manifest.permission.READ_PHONE_STATE], reqid)
-
-		}
-
-	}).then(function(hasPermissions) {
-
-		let manager = application.android.context.getSystemService(android.content.Context.TELEPHONY_SERVICE)
+		let manager = androidApp.context.getSystemService(android.content.Context.TELEPHONY_SERVICE)
 		let results: any = {
 			countryCode: manager.getSimCountryIso() || "",
 			simOperator: manager.getSimOperator() || "",
@@ -101,14 +65,6 @@ export function Telephony(askPermission?: boolean): Promise<any> {
 		if (results.simOperator.length >= 3) {
 			results.mcc = results.simOperator.substring(0, 3)
 			results.mnc = results.simOperator.substring(3)
-		}
-
-		if (hasPermissions) {
-			results.phoneNumber = manager.getLine1Number() || ""
-			results.deviceId = manager.getDeviceId() || ""
-			results.deviceSoftwareVersion = manager.getDeviceSoftwareVersion() || ""
-			results.simSerialNumber = manager.getSimSerialNumber() || ""
-			results.subscriberId = manager.getSubscriberId() || ""
 		}
 
 		return Promise.resolve(results)

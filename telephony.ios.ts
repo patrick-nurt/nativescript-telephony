@@ -26,9 +26,18 @@
 	Peter Bakondy
 	- https://github.com/pbakondy/cordova-plugin-sim
 **/
-declare let CTTelephonyNetworkInfo: any
 
-export function Telephony(): Promise<any> {
+export interface TelephonyInfo {
+	countryCode?: string;
+	allowsVOIP?: string;
+	carrierName?: string;
+	mcc?: string;
+	mnc?: string;
+}
+
+declare var CTTelephonyNetworkInfo: any;
+
+export function Telephony(): Promise<TelephonyInfo> {
 
 	let netinfo = new CTTelephonyNetworkInfo()
 	let carrier = netinfo.subscriberCellularProvider

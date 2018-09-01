@@ -70,7 +70,9 @@ function hasPermission(): boolean {
 export function Telephony(askForPermission?: boolean): Promise<TelephonyInfo> {
 	return new Promise(function(resolve, reject) {
 
-		if (!askForPermission || hasPermission()) {
+		if (!askForPermission){
+			resolve(false)
+		} else if (hasPermission()) {
 			resolve(true)
 		} else {
 

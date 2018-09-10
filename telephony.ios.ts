@@ -39,8 +39,8 @@ declare var CTTelephonyNetworkInfo: any;
 
 export function Telephony(): Promise<TelephonyInfo> {
 
-	let netinfo = new CTTelephonyNetworkInfo()
-	let carrier = netinfo.subscriberCellularProvider
+	const netinfo = new CTTelephonyNetworkInfo(),
+		  carrier = netinfo.subscriberCellularProvider
 
 	if (carrier) {
 		return Promise.resolve({

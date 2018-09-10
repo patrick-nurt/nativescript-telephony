@@ -44,13 +44,10 @@
 	"homepage": "https://github.com/roblav96/nativescript-telephony",
 	"readmeFilename": "README.md",
 	"scripts": {
-		"build": "tsc",
-		"demo.ios": "npm run preparedemo && cd demo && tns run ios",
-		"demo.android": "npm run preparedemo && cd demo && tns run android",
-		"preparedemo": "npm run build && cd demo && tns plugin remove nativescript-telephony && tns plugin add .. && tns install",
-		"setup": "cd demo && npm install && cd .. && npm run build && cd demo && tns plugin add .. && cd .."
+		"build": "tsc"
 	},
 	"devDependencies": {
+		"tns-core-modules": "^4.2.0",
 		"tns-platform-declarations": "^2.0.0",
 		"typescript": "~2.1.0"
 	}

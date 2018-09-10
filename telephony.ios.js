@@ -1,7 +1,5 @@
-"use strict";
-function Telephony() {
-    var netinfo = new CTTelephonyNetworkInfo();
-    var carrier = netinfo.subscriberCellularProvider;
+export function Telephony() {
+    const netinfo = new CTTelephonyNetworkInfo(), carrier = netinfo.subscriberCellularProvider;
     if (carrier) {
         return Promise.resolve({
             allowsVOIP: carrier.allowsVOIP,
@@ -15,4 +13,3 @@ function Telephony() {
         return Promise.reject(new Error('Null carrier information!'));
     }
 }
-exports.Telephony = Telephony;
